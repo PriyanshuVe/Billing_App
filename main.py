@@ -1,3 +1,5 @@
+from dotenv import load_dotenv 
+import os  # Import os to use environment variables
 import sys
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout,
@@ -6,15 +8,18 @@ from PySide6.QtWidgets import (
 )
 import mysql.connector
 
+# Load environment variables from the .env file
+load_dotenv()
 
 # === Database Layer ===
 class Database:
     def __init__(self):
+        # Retrieve database credentials from the environment variables
         self.connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="PvMySQLuser@123",  # 🔁 Replace with your MySQL password
-            database="billing_app"
+            host=os.getenv("DB_HOST", "localhost"),  # Default to localhost if not set
+            user=os.getenv("DB_USER", "root"),  # Default to root if not set
+            password=os.getenv("DB_PASSWORD", ""),  # Default to empty if not set
+            database=os.getenv("DB_NAME", "billing_app")  # Default to billing_app if not set
         )
 
     def insert_customer(self, name, address, contact):
